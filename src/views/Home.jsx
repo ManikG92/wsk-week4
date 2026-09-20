@@ -1,52 +1,51 @@
+import {useState, useEffect} from 'react';
 import MediaRow from '../components/MediaRow';
-
-const mediaArray = [
-  {
-    media_id: 8,
-    user_id: 5,
-    filename: 'https://placehold.co/1200x800/png?text=Pic1',
-    thumbnail: 'https://placehold.co/320x240/png?text=Thumb1',
-    filesize: 170469,
-    media_type: 'image/jpeg',
-    title: 'Picture 1',
-    description: 'This is a placeholder picture.',
-    created_at: '2024-01-07T20:49:34.000Z',
-  },
-  {
-    media_id: 9,
-    user_id: 7,
-    filename: 'https://placehold.co/800x600/png?text=Pic2',
-    thumbnail: 'https://placehold.co/320x240/png?text=Thumb2',
-    filesize: 1002912,
-    media_type: 'image/jpeg',
-    title: 'Pic 2',
-    description: '',
-    created_at: '2024-01-07T21:32:27.000Z',
-  },
-  {
-    media_id: 17,
-    user_id: 2,
-    filename:
-      'http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_60fps_normal.mp4',
-    thumbnail: 'https://placehold.co/320x240/png?text=BunnyThumb',
-    filesize: 1236616,
-    media_type: 'video/mp4',
-    title: 'Bunny',
-    description: 'Butterflies fly around the bunny.',
-    created_at: '2024-01-07T20:48:13.000Z',
-  },
-];
+import fetchData from '../utils/fetchData';
 
 const Home = () => {
+  // 1. Create state to hold the fetched media items
+  const [mediaArray, setMediaArray] = useState([]);
+
+  // 2. useEffect runs once when the component first mounts
+  useEffect(() => {
+    const getMedia = async () => {
+      try {
+        // Fetch the raw list of media items from Metropolia API
+        const media = await fetchData(
+          import.meta.env.VITE_MEDIA_API + '/media',
+        );
+
+        // Fetch the username for each item using user_id via Promise.all
+        const mediaWithUsers = await Promise.all(
+          media.map(async (item) => {
+            const user = await fetchData(
+              import.meta.env.VITE_AUTH_API + '/users/' + item.user_id,
+            );
+            // Return item with the fetched username merged in
+            return {...item, username: user.username};
+          }),
+        );
+
+        // Save the enriched items into state
+        setMediaArray(mediaWithUsers);
+      } catch (error) {
+        console.error('Failed to fetch media:', error);
+      }
+    };
+
+    getMedia();
+  }, []); // Empty dependency array ensures this runs only once
+
   return (
     <>
-      <h2>My Media</h2>
+      <h2>Media List</h2>
       <table>
         <thead>
           <tr>
             <th>Thumbnail</th>
             <th>Title</th>
             <th>Description</th>
+            <th>Owner</th>
             <th>Created</th>
             <th>Size</th>
             <th>Type</th>
