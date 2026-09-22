@@ -17,3 +17,7 @@ Open [forms](https://users.metropolia.fi/~manikg/forms/) to view it in the brows
 # WSK Week 5 - Context
 
 Open [context](https://users.metropolia.fi/~manikg/context/) to view it in the browser.
+
+# WSK Week 5 - Upload
+
+Open [upload](https://users.metropolia.fi/~manikg/upload/) to view it in the browser.
