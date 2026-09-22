@@ -9,3 +9,7 @@ Open [hooks](https://users.metropolia.fi/~manikg/hooks/) to view it in the brows
 # WSK Week 5 - Custom Hooks
 
 Open [custom-hooks](https://users.metropolia.fi/~manikg/custom-hooks/) to view it in the browser.
+
+# WSK Week 5 - Forms
+
+Open [forms](https://users.metropolia.fi/~manikg/forms/) to view it in the browser.
