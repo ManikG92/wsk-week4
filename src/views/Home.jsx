@@ -1,40 +1,8 @@
-import {useState, useEffect} from 'react';
 import MediaRow from '../components/MediaRow';
-import fetchData from '../utils/fetchData';
+import {useMedia} from '../hooks/apiHooks';
 
 const Home = () => {
-  // 1. Create state to hold the fetched media items
-  const [mediaArray, setMediaArray] = useState([]);
-
-  // 2. useEffect runs once when the component first mounts
-  useEffect(() => {
-    const getMedia = async () => {
-      try {
-        // Fetch the raw list of media items from Metropolia API
-        const media = await fetchData(
-          import.meta.env.VITE_MEDIA_API + '/media',
-        );
-
-        // Fetch the username for each item using user_id via Promise.all
-        const mediaWithUsers = await Promise.all(
-          media.map(async (item) => {
-            const user = await fetchData(
-              import.meta.env.VITE_AUTH_API + '/users/' + item.user_id,
-            );
-            // Return item with the fetched username merged in
-            return {...item, username: user.username};
-          }),
-        );
-
-        // Save the enriched items into state
-        setMediaArray(mediaWithUsers);
-      } catch (error) {
-        console.error('Failed to fetch media:', error);
-      }
-    };
-
-    getMedia();
-  }, []); // Empty dependency array ensures this runs only once
+  const {mediaArray} = useMedia();
 
   return (
     <>
